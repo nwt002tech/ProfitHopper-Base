@@ -1,16 +1,91 @@
-from utils import map_advantage, map_volatility, map_bonus_freq
-
 def get_css():
     return """
     <style>
-    /* Unique class names to avoid conflicts */
     .ph-sticky-header {
         position: sticky;
         top: 0;
         background: white;
         z-index: 100;
-        padding: 10px 0;
+        padding: 0 !important;
         box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    /* New compact summary styles */
+    .compact-summary {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 8px;
+        margin-bottom: 20px;
+    }
+    
+    .summary-card {
+        background: white;
+        border-radius: 10px;
+        padding: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        border: 1px solid #e0e0e0;
+        text-align: center;
+    }
+    
+    .summary-icon {
+        font-size: 1.5rem;
+        margin-bottom: 5px;
+    }
+    
+    .summary-label {
+        font-size: 0.7rem;
+        color: #7f8c8d;
+        margin-bottom: 3px;
+    }
+    
+    .summary-value {
+        font-size: 0.95rem;
+        font-weight: bold;
+        color: #2c3e50;
+    }
+    
+    .stop-loss .summary-value {
+        color: #e74c3c;
+    }
+    
+    .strategy-tag {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        margin-top: 8px;
+    }
+    
+    .strategy-conservative {
+        background: #d4edda;
+        color: #155724;
+    }
+    
+    .strategy-moderate {
+        background: #cce5ff;
+        color: #004085;
+    }
+    
+    .strategy-standard {
+        background: #fff3cd;
+        color: #856404;
+    }
+    
+    @media (max-width: 768px) {
+        .compact-summary {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .compact-summary {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .summary-card {
+            padding: 8px;
+        }
     }
     
     .ph-game-card {
@@ -20,6 +95,7 @@ def get_css():
         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         background-color: #f8f9fa;
         border-left: 4px solid #4e89ae;
+        position: relative;
     }
     
     .ph-game-title {
@@ -42,11 +118,6 @@ def get_css():
         left: 10px;
         color: #4e89ae;
         font-size: 1.2rem;
-    }
-    
-    .ph-stop-loss {
-        color: #e74c3c;
-        font-weight: bold;
     }
     
     .ph-game-grid {
@@ -72,7 +143,7 @@ def get_css():
     }
     
     .session-card {
-        padding: 15px;
+        padding: 10px 15px;
         margin: 10px 0;
         border-radius: 8px;
         background-color: #f8f9fa;
@@ -134,34 +205,6 @@ def get_header():
     <div style="text-align:center; padding:20px 0; background:linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d); border-radius:10px; margin-bottom:30px;">
         <h1 style="color:white; margin:0;">🏆 Profit Hopper Casino Manager</h1>
         <p style="color:white; margin:0;">Smart Bankroll Management & Game Recommendations</p>
-    </div>
-    """
-
-def game_card(row):
-    return f"""
-    <div class="ph-game-card">
-        <div class="ph-game-title">🎰 {row['game_name']}</div>
-        <div class="ph-game-detail">
-            <strong>🗂️ Type:</strong> {row['type']}
-        </div>
-        <div class="ph-game-detail">
-            <strong>💸 Min Bet:</strong> ${row['min_bet']:,.2f}
-        </div>
-        <div class="ph-game-detail">
-            <strong>🧠 Advantage Play:</strong> {map_advantage(int(row['advantage_play_potential']))}
-        </div>
-        <div class="ph-game-detail">
-            <strong>🎲 Volatility:</strong> {map_volatility(int(row['volatility']))}
-        </div>
-        <div class="ph-game-detail">
-            <strong>🎁 Bonus Frequency:</strong> {map_bonus_freq(row['bonus_frequency'])}
-        </div>
-        <div class="ph-game-detail">
-            <strong>🔢 RTP:</strong> {row['rtp']:.2f}%
-        </div>
-        <div class="ph-game-detail">
-            <strong>💡 Tips:</strong> {row['tips']}
-        </div>
     </div>
     """
 

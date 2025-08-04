@@ -1,12 +1,15 @@
 import streamlit as st
-from datetime import datetime
 
 def initialize_trip_state():
-    # Initialize only if not already set
+    # Ensure session_log is always initialized
     if 'session_log' not in st.session_state:
         st.session_state.session_log = []
+    
+    # Initialize current trip ID
     if 'current_trip_id' not in st.session_state:
         st.session_state.current_trip_id = 1
+    
+    # Initialize casino list
     if 'casino_list' not in st.session_state:
         st.session_state.casino_list = sorted([
             "L'auberge Lake Charles",
@@ -17,13 +20,16 @@ def initialize_trip_state():
             "Paragon Marksville",
             "Coushatta"
         ])
+    
+    # Initialize trip settings with proper defaults
     if 'trip_settings' not in st.session_state:
         st.session_state.trip_settings = {
             'casino': st.session_state.casino_list[0] if st.session_state.casino_list else "",
             'starting_bankroll': 100.0,
             'num_sessions': 10
         }
-    # Initialize trip-specific bankroll tracking
+    
+    # Initialize trip bankrolls tracking
     if 'trip_bankrolls' not in st.session_state:
         st.session_state.trip_bankrolls = {1: 100.0}
 
@@ -38,19 +44,14 @@ def get_trip_profit(trip_id=None):
     return sum(s['profit'] for s in sessions)
 
 def get_current_bankroll():
-    # Get current trip's starting bankroll
+    # Always calculate from scratch
     starting = st.session_state.trip_settings['starting_bankroll']
-    
-    # Calculate profit for current trip
-    current_trip_profit = get_trip_profit(st.session_state.current_trip_id)
-    
-    return starting + current_trip_profit
+    return starting + get_trip_profit()
 
 def get_session_bankroll():
     current_bankroll = get_current_bankroll()
     completed_sessions = len(get_current_trip_sessions())
     remaining_sessions = max(1, st.session_state.trip_settings['num_sessions'] - completed_sessions)
-    
     return current_bankroll / remaining_sessions
 
 def render_sidebar():
